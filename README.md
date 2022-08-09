@@ -47,7 +47,7 @@ nrs: (numeric rating score) 정답 라벨 // 통증의 정도를 0~10범위로 �
 ./pdor/*   
 ./all.json (# json scheme)  
 
-## v2  
+## v1.5
 
 - +demographic data (gender, age)
 
