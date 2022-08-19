@@ -40,6 +40,7 @@ def ppg_pre(x,sample_rate=300,norm=False):
     x = interpolate(x)
     x = bandpass(x, band=[0.5,15],sample_rate=sample_rate)
     x = moving_average(x,w=30)
+    x = signal.resample(x,sample_rate*60*5)
     if norm:
         x = norm_z(x)
     return x
