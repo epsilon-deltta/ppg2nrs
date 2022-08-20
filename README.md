@@ -1,8 +1,42 @@
 # ppg2nrs
 Pre&amp;Post-op ppg > NRS (post-op, in PACU)
 
+## Input
 
+Pre-op(5Min after NIBP(non-invasive blood pressure))
+- ECG
+- PPG
+Post-op(5Min)
+- ECG
+- PPG
 
+## Output
+
+Pain
+0: NRS(0~3)
+1: NRS(0~3)
+
+## Preprocessing
+
+sample_rate: 300Hz
+
+### PPG
+
+- interpolate (constant)
+- Bandpass filter (0.5~15)
+- Moving average (30taps)
+(- z-score)
+- Resampling (to set 90000)
+- Spectrogram
+
+### ECG
+
+- interpolation (constant)
+- elgendi preprocessing
+
+## Spectogram for ECG and PPG (of pre/post-op)
+
+![](./assets/spec.png)
 
 # Data
 
