@@ -36,7 +36,12 @@ sample_rate: 300Hz
 
 ## Spectogram for ECG and PPG (of pre/post-op)
 
-![](./assets/spec.png)
+- ppg 
+![](./assets/ppg_or_spec.png)
+![](./assets/ppg_rec_spec.png)
+- ecg
+![](./assets/ecg_or_spec.png)
+![](./assets/ecg_rec_spec.png)
 
 # Data
 
