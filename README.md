@@ -12,9 +12,10 @@ Post-op(5Min)
 
 ## Output
 
-Pain
-0: NRS(0~3)
-1: NRS(0~3)
+|  label(pain)  |   nrs |
+|---:|-------:|
+|  0 |    0~3 |
+|  1 |    4~9 |
 
 ## Preprocessing
 
@@ -114,3 +115,40 @@ nrs: (numeric rating score) 정답 라벨 // 통증의 정도를 0~10범위로 �
 About label  
 no-mild: moderate-severe = 545:116 ≓ 4.5:1
 
+## v4
+
+- Applied Filter4
+    1. NRS? 
+    2. pdor&pdrec pair? 
+    3. General Anesthesia? 
+    4. Gynecology dept.?  
+    5. __Data Quality? (Non-existing, too many null, …)__ (black list)
+
+======== Final Scheme  
+./all_3.json  
+../data/all_3/*.npy  
+
+./train_3.json  
+./val_3.json  
+./test_3.json  
+
+
+black list 
+```python 
+black_list = ['01826958_PDOR1_210421_124500_1',
+              '01853529_PDOR1_210419_083500_1',
+              '01876359_PDOR2_210602_083200_1',
+              '01656320_PDOR2_210526_091300_1',
+              '01618678_PDOR1_210615_083000_1',
+              '01159584_PDOR1_211025_083400_1',
+              '00578148_PDOR2_210805_111500_1',
+              '01853408_PDOR1_211115_083100_1',
+              '01906040_PDOR1_210831_110500_1',
+              '00435676_PDREC02_210902_093500_1', # dataset 
+              '01060037_PDOR2_211206_102000_1', #  Filling missing values error
+              '01929835_PDOR2_211102_093000_1',
+              '01392754_PDOR2_220111_105500_1',
+              '01439205_PDOR2_211206_121100_1', # in dl, fmissing
+              '00435676_PDOR1_210902_084000_1'
+             ]
+```
