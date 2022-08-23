@@ -108,7 +108,8 @@ class VitalDataset(torch.utils.data.Dataset):
         y = F.one_hot(y,num_classes=2)
         
         vital = vital.float()
-        y = y.float()
+        y = y.type(torch.LongTensor)
+
         return vital, y
     
     def __len__(self):
@@ -141,7 +142,7 @@ class VitalDataset(torch.utils.data.Dataset):
         
         
         y = item['nrs_2']
-        
+
 #        y = torch.tensor(y)
 #        y = F.one_hot(y,num_classes=2)
 #        
@@ -177,8 +178,10 @@ class VitalDataset_fs(torch.utils.data.Dataset):
         
         vital = torch.tensor(vital)
         vital = vital.float()
+        
         y = torch.tensor(y)
-        y = y.float()
+        y = y.type(torch.LongTensor)
+
         return vital, y
     
     def __len__(self):
