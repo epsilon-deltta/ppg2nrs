@@ -66,7 +66,7 @@ import vitaldb
 import torch
 from torch.nn import functional as F
 
-from preprocess import list2specgram
+from preprocess import list2specgram, ecgs2specgram, ppgs2specgram
 # from dataset import get_vital 
 
 class VitalDataset(torch.utils.data.Dataset):
@@ -84,13 +84,21 @@ class VitalDataset(torch.utils.data.Dataset):
         
         item = self.jf[idx]
         orp, recp = self.get_path(item) 
-
+        # print(f'{orp}\n{recp} \n===')
         ppg_or, ecg_or   = get_vital(orp,  type_='or' ,sample_rate=self.sample_rate,duration=self.duration)
         ppg_rec, ecg_rec = get_vital(recp, type_='rec',sample_rate=self.sample_rate,duration=self.duration)
         
-        ppgecg = list2specgram([ppg_or, ppg_rec, ecg_or, ecg_rec],type_=['ppg','ppg','ecg','ecg'], sample_rate=self.sample_rate)
-        ppg_or, ppg_rec, ecg_or, ecg_rec = ppgecg
+#         ppgecg = list2specgram([ppg_or, ppg_rec, ecg_or, ecg_rec],type_=['ppg','ppg','ecg','ecg'], sample_rate=self.sample_rate)
+#         ppg_or, ppg_rec, ecg_or, ecg_rec = ppgecg
         
+        ecg_or, ecg_rec = ecgs2specgram([ecg_or,ecg_rec],sample_rate=self.sample_rate)
+        ppg_or, ppg_rec = ppgs2specgram([ppg_or,ppg_rec],sample_rate=self.sample_rate)
+        
+        #if all([sig.shape == (151,342) for sig in [ppg_or,ppg_rec,ecg_or,ecg_rec]]):
+         #   vital = np.array([ppg_or,ecg_or,ppg_rec,ecg_rec])
+        #else:
+         #   vital = np.random.rand(4,151,342)
+          #  print('\033[32m \033[41m'+f'Error: {orp}\n{recp}\n\n '+ '\033[0m')
         vital = np.array([ppg_or,ecg_or,ppg_rec,ecg_rec])
         vital = torch.tensor(vital)
         
@@ -99,6 +107,8 @@ class VitalDataset(torch.utils.data.Dataset):
         y = torch.tensor(y)
         y = F.one_hot(y,num_classes=2)
         
+        vital = vital.float()
+        y = y.float()
         return vital, y
     
     def __len__(self):
@@ -111,3 +121,87 @@ class VitalDataset(torch.utils.data.Dataset):
         recp = item['rec_path'][0].replace('\\','/')
         recp = os.path.join(self.root_dir,recp)
         return orp, recp
+
+    
+    def getitem(self,idx):
+        
+        item = self.jf[idx]
+        orp, recp = self.get_path(item) 
+        # print(f'{orp}\n{recp} \n===')
+        ppg_or, ecg_or   = get_vital(orp,  type_='or' ,sample_rate=self.sample_rate,duration=self.duration)
+        ppg_rec, ecg_rec = get_vital(recp, type_='rec',sample_rate=self.sample_rate,duration=self.duration)
+        
+#         ppgecg = list2specgram([ppg_or, ppg_rec, ecg_or, ecg_rec],type_=['ppg','ppg','ecg','ecg'], sample_rate=self.sample_rate)
+#         ppg_or, ppg_rec, ecg_or, ecg_rec = ppgecg
+        
+        ecg_or, ecg_rec = ecgs2specgram([ecg_or,ecg_rec],sample_rate=self.sample_rate)
+        ppg_or, ppg_rec = ppgs2specgram([ppg_or,ppg_rec],sample_rate=self.sample_rate)
+        
+        vital = np.array([ppg_or,ecg_or,ppg_rec,ecg_rec])
+        
+        
+        y = item['nrs_2']
+        
+#        y = torch.tensor(y)
+#        y = F.one_hot(y,num_classes=2)
+#        
+#        vital = vital.float()
+#        y = y.float()
+        return vital, y
+
+
+
+
+class VitalDataset_fs(torch.utils.data.Dataset):
+    def __init__(self,root_dir='../data/all_3',ann_path='../data/pd_gy/train.json',sample_rate=300,duration=300*60*5):
+        
+        with open(ann_path,'r') as f:
+            jf = json.load(f)
+        
+        self.jf = jf
+        self.root_dir = root_dir
+        self.sample_rate = sample_rate
+        self.duration = duration
+        
+    def __getitem__(self,idx):
+        
+        item = self.jf[idx]
+        
+        fname = item['pt_id_date']
+        vital = np.load(os.path.join(self.root_dir,f'{fname}.npy'))
+        
+        
+        y = item['nrs_2']
+        # y = F.one_hot(y,num_classes=2)
+        
+        
+        vital = torch.tensor(vital)
+        vital = vital.float()
+        y = torch.tensor(y)
+        y = y.float()
+        return vital, y
+    
+    def __len__(self):
+        return len(self.jf)
+    
+    def get_npvital(self,idx):
+        pass
+    
+    def get_path(self, item):
+        
+        orp = item['or_path'][0].replace('\\','/')
+        orp = os.path.join(self.root_dir, orp)
+        recp = item['rec_path'][0].replace('\\','/')
+        recp = os.path.join(self.root_dir,recp)
+        return orp, recp
+
+    
+    def getitem_np(self,idx):
+        
+        item = self.jf[idx]
+        
+        fname = item['pt_id_date']
+        vital = np.load(os.path.join(self.root_dir,f'{fname}.npy'))
+        y = item['nrs_2']
+        
+        return vital, y
