@@ -1,9 +1,6 @@
 import torch
-def train(dl,model,lossf,opt,device='cuda',class_weight=False):
-    
-    if class_weight: 
-        lossf.weight = class_weight
-        
+def train(dl,model,lossf,opt,device='cuda'):
+
     model.train()
     for x,y in dl:
         x,y = x.to(device),y.to(device)
@@ -35,15 +32,12 @@ def test(dl,model,lossf,epoch=None,exist_acc=True,device='cuda'):
     return accuracy,val_loss
 
 import copy
-def trainval(trdl, valdl, model, loss, opt, class_weight=False, epoch=100,patience = 5, exist_acc=True, device='cuda'):
+def trainval(trdl, valdl, model, loss, opt, epoch=100,patience = 5, exist_acc=True, device='cuda'): # ,  class_weight=False
     val_losses = {0:1}
     model = model.to(device)
-    
-    if class_weight:
-        class_weight = get_classweight(trdl)
-        
+            
     for i in range(epoch):
-        train(trdl,model,loss,opt,device=device,class_weight=class_weight)
+        train(trdl,model,loss,opt,device=device)
         acc,val_loss = test(valdl,model,loss,epoch=i,exist_acc=exist_acc,device=device)
 
 
