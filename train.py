@@ -49,7 +49,7 @@ def trainval(trdl, valdl, model, loss, opt, epoch=100,patience = 5, exist_acc=Tr
     return best_model, val_losses
 
 import numpy as np
-def get_classweight(trdl):
+def get_classweight_dl(trdl):
     
     labels = []
     for i in range(len(trdl.dataset)):
@@ -61,3 +61,25 @@ def get_classweight(trdl):
     class_weights=class_weight.compute_class_weight('balanced',classes=np.unique(labels),y=labels)
     class_weights=torch.tensor(class_weights,dtype=torch.float)
     return class_weights
+
+def get_classweight(trdt):
+    
+    labels = []
+    for i in range(len(trdt)):
+        _,y = trdt[i]
+        labels.append(y)
+    labels = np.array(labels)
+    
+    from sklearn.utils import class_weight
+    class_weights=class_weight.compute_class_weight('balanced',classes=np.unique(labels),y=labels)
+    class_weights=torch.tensor(class_weights,dtype=torch.float)
+    return class_weights
+
+def get_classweight_all(trdt,class_weight):
+    
+    from torch.utils.data import WeightedRandomSampler
+    tr_y = []
+    for i in range(len(trdt)):
+        tr_y.append(trdt[i][1])
+    class_weight_all = class_weight[tr_y]
+    return class_weight_all
