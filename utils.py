@@ -41,3 +41,21 @@ def get_sample_config(idx=0,root_dir = '../data/pd_gy',path = '../data/pd_gy/tra
     nrs = tr_jf[idx]['nrs']
     item = tr_jf[idx]
     return orp, recp, sample_rate, min5, item
+
+# test
+# from utils import get_sample_config
+# orp, recp, sample_rate, min5, item = get_sample_config()/
+
+
+# def get_classweight(trdl):
+    
+#     labels = []
+#     for i in range(len(trdl.dataset)):
+#         _,y = trdl.dataset[i]
+#         labels.append(y)
+#     labels = np.array(labels)
+    
+#     from sklearn.utils import class_weight
+#     class_weights=class_weight.compute_class_weight('balanced',classes=np.unique(tr_y),y=tr_y.to_numpy())
+#     class_weights=torch.tensor(class_weights,dtype=torch.float)
+#     return class_weights
