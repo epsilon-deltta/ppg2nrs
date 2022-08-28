@@ -32,14 +32,16 @@ def test(dl,model,lossf,epoch=None,exist_acc=True,device='cuda'):
     return accuracy,val_loss
 
 import copy
-def trainval(trdl, valdl, model, loss, opt, epoch=100,patience = 5, exist_acc=True, device='cuda'): # ,  class_weight=False
+def trainval(trdl, valdl, model, loss, opt, scheduler=None, epoch=100,patience = 5, exist_acc=True, device='cuda'): # ,  class_weight=False
     val_losses = {0:1}
     model = model.to(device)
             
     for i in range(epoch):
         train(trdl,model,loss,opt,device=device)
         acc,val_loss = test(valdl,model,loss,epoch=i,exist_acc=exist_acc,device=device)
-
+        
+        if scheduler:
+            scheduler.step()
 
         if min(val_losses.values() ) > val_loss:
             val_losses[i] = val_loss
