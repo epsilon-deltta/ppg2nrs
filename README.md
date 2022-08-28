@@ -1,3 +1,5 @@
+![](./assets/ppg2nrs.png)
+
 # ppg2nrs
 Pre&amp;Post-op ppg > NRS (post-op, in PACU)
 
