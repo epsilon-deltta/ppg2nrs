@@ -22,6 +22,7 @@ Post-op(5Min)
 ## Preprocessing
 
 sample_rate: 300Hz
+![](./assets/preprocessing.png)
 
 ### PPG
 
@@ -36,6 +37,8 @@ sample_rate: 300Hz
 
 - interpolation (constant)
 - elgendi preprocessing
+
+![](./assets/elgendi.png)
 
 ## Spectogram for ECG and PPG (of pre/post-op)
 
@@ -55,6 +58,12 @@ sample_rate: 300Hz
 |---:|-------:|
 |  0 |    545 |
 |  1 |    116 |
+
+# Fast-dataset vs Original 
+There are two kinds of dataset in dataset.py
+The fast-dataset extracted final results as a numpy from original dataset.
+![](./assets/fastset.png)
+
 
 # Data Version History
 
