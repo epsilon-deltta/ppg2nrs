@@ -49,6 +49,13 @@ sample_rate: 300Hz
 ![](./assets/ecg_or_spec.png)
 ![](./assets/ecg_rec_spec.png)
 
+# Model 
+## model input structure
+### Type 1. 4 channel
+![](./assets/model_input_type1.png)
+### Type 2. OR vs REC
+![](./assets/model_input_type2.png)
+
 # Data
 
 - label  
@@ -60,9 +67,9 @@ sample_rate: 300Hz
 |  1 |    116 |
 
 # Fast-dataset vs Original 
-There are two kinds of dataset in dataset.py
+There are two kinds of dataset in dataset.py  
 The fast-dataset extracted final results as a numpy from original dataset.
-![](./assets/fastset.png)
+![](./assets/fastset.png)  
 
 
 # Data Version History
