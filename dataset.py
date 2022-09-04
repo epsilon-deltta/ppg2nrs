@@ -67,6 +67,7 @@ import torch
 from torch.nn import functional as F
 
 from preprocess import list2specgram, ecgs2specgram, ppgs2specgram
+from preprocess import ppg_pre, ecg_pre
 # from dataset import get_vital 
 
 class VitalDataset(torch.utils.data.Dataset):
@@ -149,9 +150,37 @@ class VitalDataset(torch.utils.data.Dataset):
 #        vital = vital.float()
 #        y = y.float()
         return vital, y
-
-
-
+        
+    def get_raw(self,idx):
+        
+        item = self.jf[idx]
+        orp, recp = self.get_path(item) 
+        # print(f'{orp}\n{recp} \n===')
+        ppg_or, ecg_or   = get_vital(orp,  type_='or' ,sample_rate=self.sample_rate,duration=self.duration)
+        ppg_rec, ecg_rec = get_vital(recp, type_='rec',sample_rate=self.sample_rate,duration=self.duration)
+        
+        vital = np.array([ppg_or,ecg_or,ppg_rec,ecg_rec])
+        return vital
+        
+    def get_pre(self,idx):
+        
+        item = self.jf[idx]
+        orp, recp = self.get_path(item) 
+        # print(f'{orp}\n{recp} \n===')
+        ppg_or, ecg_or   = get_vital(orp,  type_='or' ,sample_rate=self.sample_rate,duration=self.duration)
+        ppg_rec, ecg_rec = get_vital(recp, type_='rec',sample_rate=self.sample_rate,duration=self.duration)
+        
+        ppg_or   = ppg_pre(ppg_or)
+        ppg_rec  = ppg_pre(ppg_rec)
+        ecg_or   = ecg_pre(ecg_or)
+        ecg_rec  = ecg_pre(ecg_rec)
+        
+        vital = np.array([ppg_or,ecg_or,ppg_rec,ecg_rec])
+        
+        return vital
+    
+    def get_info(self,idx):
+        return self.jf[idx]
 
 class VitalDataset_fs(torch.utils.data.Dataset):
     def __init__(self,root_dir='../data/all_3',ann_path='../data/pd_gy/train.json',sample_rate=300,duration=300*60*5):
