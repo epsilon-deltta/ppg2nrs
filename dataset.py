@@ -181,6 +181,27 @@ class VitalDataset(torch.utils.data.Dataset):
     
     def get_info(self,idx):
         return self.jf[idx]
+    
+    def get_spectrogram(self,idx):
+        
+        item = self.jf[idx]
+        orp, recp = self.get_path(item) 
+        # print(f'{orp}\n{recp} \n===')
+        ppg_or, ecg_or   = get_vital(orp,  type_='or' ,sample_rate=self.sample_rate,duration=self.duration)
+        ppg_rec, ecg_rec = get_vital(recp, type_='rec',sample_rate=self.sample_rate,duration=self.duration)
+        
+        from preprocess import ppg2specgram_all, ecg2specgram_all
+        
+        f,t,ppg_or = ppg2specgram_all(ppg_or,self.sample_rate)
+        f,t,ecg_or = ecg2specgram_all(ecg_or,self.sample_rate)
+        
+        f,t,ppg_rec = ppg2specgram_all(ppg_rec,self.sample_rate)
+        f,t,ecg_rec = ecg2specgram_all(ecg_rec,self.sample_rate)
+        
+        vital = np.array([ppg_or,ecg_or,ppg_rec,ecg_rec])
+        return f, t, vital
+        
+        
 
 class VitalDataset_fs(torch.utils.data.Dataset):
     def __init__(self,root_dir='../data/all_3',ann_path='../data/pd_gy/train.json',sample_rate=300,duration=300*60*5):
@@ -237,3 +258,4 @@ class VitalDataset_fs(torch.utils.data.Dataset):
         y = item['nrs_2']
         
         return vital, y
+    

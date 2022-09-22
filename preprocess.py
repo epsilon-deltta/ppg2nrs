@@ -68,7 +68,22 @@ def ecg2specgram(x: np.array,sample_rate= 300):
     x = ecg_pre(x, sample_rate=sample_rate)
     f, t, xspec = signal.spectrogram(x, fs=sample_rate, nperseg=sample_rate)
     return xspec
+########
 
+def ppg2specgram_all(x: np.array,sample_rate= 300):
+    
+    x = ppg_pre(x, sample_rate=sample_rate, norm=False)
+    f, t, xspec = signal.spectrogram(x, fs=sample_rate, nperseg=sample_rate)
+    return f,t,xspec
+
+
+def ecg2specgram_all(x: np.array,sample_rate= 300):
+    
+    x = ecg_pre(x, sample_rate=sample_rate)
+    f, t, xspec = signal.spectrogram(x, fs=sample_rate, nperseg=sample_rate)
+    return f,t,xspec
+
+########    
     
 def ecgs2specgram(x:list,sample_rate=300):
     specgrams = []
