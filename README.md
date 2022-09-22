@@ -1,7 +1,29 @@
 ![](./assets/ppg2nrs.png)
 
+
 # ppg2nrs
 Pre&amp;Post-op ppg > NRS (post-op, in PACU)
+
+# Usage 
+
+dataset class
+```python
+from dataset import VitalDataset_fs
+root_dir = f'../data/all_3'
+trdt  = VitalDataset_fs(root_dir,f'../data/pd_gy/train_3.json')
+valdt = VitalDataset_fs(root_dir,f'../data/pd_gy/val_3.json') 
+tedt  = VitalDataset_fs(root_dir,f'../data/pd_gy/test_3.json') 
+```
+model class
+```python
+from models import PrePostNet
+model = PrePostNet()
+```
+train and validation
+```python
+from train import trainval
+best_model,val_losses = trainval(trdl,valdl,model,loss,opt,scheduler=scheduler,device=device, exist_acc=True)
+```
 
 ## Input
 
@@ -170,3 +192,8 @@ black_list = ['01826958_PDOR1_210421_124500_1',
               '00435676_PDOR1_210902_084000_1'
              ]
 ```
+
+## Acknowledge
+
+Dongheon Lee , Ph.D
+Boohwi Hong , M.D., Ph.D.
